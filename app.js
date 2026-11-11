@@ -759,4 +759,88 @@
     });
   })();
 
+
+  /* ---------- APK 下载：GitHub Releases 直链 + 公共加速线路自动切换 ----------
+     设计要点：
+     · <a download> 的 href 默认就是 GitHub 直连 —— JS 完全失效时点击仍能直接下载，
+       且服务端返回 Content-Disposition: attachment，浏览器不会跳转到其他页面。
+     · 这些线路都不允许 CORS 读取响应，所以不能用 fetch 判断状态码；这里用
+       mode:'no-cors' 的 HEAD 只探测「域名是否连通」，超时即视为不可用。
+     · 并行探测后按优先级取第一个可用线路；全部失败则保持 GitHub 直连（已实测可用）。
+     · 返回 HTML 验证页的代理已排除，避免点击后被导航到中间页面。
+     · 用户可点「换一条线路」手动轮换，同样不跳页。 */
+  (function () {
+    var a = document.getElementById("apkDownload");
+    var line = document.getElementById("apkLine");
+    var sw = document.getElementById("apkSwitch");
+    if (!a) return;
+    var REL = "https://github.com/Camille-2010/OnDevice-Kit/releases/download/v1.20.0-201/OnDeviceKit-v1.20.0-201-release.apk";
+    var SOURCES = [
+      { name: "加速线路 A · ghproxy", url: "https://ghproxy.net/" + REL },
+      { name: "加速线路 B · ghfast", url: "https://ghfast.top/" + REL },
+      { name: "加速线路 C · gh-proxy", url: "https://gh-proxy.com/" + REL },
+      { name: "加速线路 D · gitmirror", url: "https://hub.gitmirror.com/" + REL },
+      { name: "加速线路 E · llkk", url: "https://gh.llkk.cc/" + REL },
+      { name: "GitHub 直连", url: REL }
+    ];
+    var DIRECT = SOURCES.length - 1;
+    var chosen = DIRECT;
+    var order = SOURCES.map(function (_, i) { return i; });
+    var PROBE_MS = 2600;
+
+    function setLine(text) { if (line) line.textContent = text; }
+    function use(idx, suffix) {
+      chosen = idx;
+      a.href = SOURCES[idx].url;
+      setLine("当前：" + SOURCES[idx].name + (suffix || ""));
+      if (sw) sw.hidden = false;
+    }
+
+    /* no-cors HEAD：只判断「能否连上」，不读取内容。超时/网络错误视为不可用。 */
+    function probe(s) {
+      return new Promise(function (resolve) {
+        var done = false;
+        var ctrl = ("AbortController" in window) ? new AbortController() : null;
+        var timer = setTimeout(function () {
+          if (ctrl) { try { ctrl.abort(); } catch (e) {} }
+          finish(false);
+        }, PROBE_MS);
+        function finish(v) {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          resolve(v);
+        }
+        var opt = { method: "HEAD", mode: "no-cors", cache: "no-store" };
+        if (ctrl) opt.signal = ctrl.signal;
+        try {
+          fetch(s.url, opt).then(function () { finish(true); },
+                                function () { finish(false); });
+        } catch (e) { finish(false); }
+      });
+    }
+
+    if ("fetch" in window && "Promise" in window) {
+      Promise.all(SOURCES.slice(0, DIRECT).map(probe)).then(function (res) {
+        var idx = -1;
+        for (var i = 0; i < res.length; i++) {
+          if (res[i] === true) { idx = order[i]; break; }
+        }
+        if (idx >= 0) use(idx, " · 自动选择");
+        else use(DIRECT, " · 直连兜底");
+      }).catch(function () { use(DIRECT, " · 直连兜底"); });
+    } else {
+      use(DIRECT, " · 直连");
+    }
+
+    if (sw) {
+      sw.addEventListener("click", function () {
+        var next = (chosen + 1) % SOURCES.length;
+        use(next, " · 手动切换");
+      });
+    }
+    /* 下载后如果线路实际不可用，用户回到页面再点一次「换一条线路」即可；
+       href 始终是一个 attachment 直链，不会把页面导航到别处。 */
+  })();
+
 })();
