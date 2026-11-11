@@ -101,7 +101,7 @@
 }
 </script>
 
-<link rel="stylesheet" href="styles.css?v=17">
+<link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body>
 
@@ -1003,9 +1003,20 @@
         <p style="margin-top:16px">本地功能不需要账号。装好后到「模型管理」导入 GGUF 文件，或从 Hugging Face 直接下载，
            不联网也能用；账号是可选的，用于云端资料同步与接收消息通知。App 内还内置了图文使用说明与 <button type="button" class="qq-inline" data-qq-open>QQ 群入口</button>。</p>
         <div class="dl-list">
-          <div class="dl-item">
+          <div class="dl-item dl-apk">
             <span class="di-ico i3d"><img src="assets/icons3d/download.png" alt=""></span>
-            <div><b>Android 安装包</b><span><a href="https://github.com/Camille-2010/OnDevice-Kit" target="_blank" rel="noopener noreferrer">侧载安装，无需应用商店</a></span></div>
+            <div class="dl-apk-body">
+              <b>Android 安装包 <span class="dl-meta">v1.20.0 (201) · 122 MB</span></b>
+              <span class="dl-apk-row">
+                <a id="apkDownload" class="dl-btn" href="https://github.com/Camille-2010/OnDevice-Kit/releases/download/v1.20.0-201/OnDeviceKit-v1.20.0-201-release.apk" download="OnDeviceKit-v1.20.0-201-release.apk">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 20h16"/></svg>
+                  下载 APK
+                </a>
+                <span id="apkLine" class="dl-line">正在选择最快线路…</span>
+                <button type="button" id="apkSwitch" class="dl-switch" hidden>换一条线路</button>
+              </span>
+              <span class="dl-note">侧载安装，无需应用商店 · 自动切换公共加速线路，失败自动回退 GitHub 直连 · SHA-256 3bebd86c60ca5c20…</span>
+            </div>
           </div>
           <div class="dl-item">
             <span class="di-ico i3d"><svg viewBox="0 0 24 24" fill="none">
@@ -1144,6 +1155,6 @@
 </div>
 <div class="qq-toast" id="qqToast" role="status" aria-live="polite"></div>
 
-<script src="app.js?v=17"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>
