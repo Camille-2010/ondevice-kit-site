@@ -1680,3 +1680,33 @@ body.qq-locked { overflow: hidden; }
   .qq-card { animation: none; }
   .qq-toast, .qq-qr, .qq-btn { transition: none; }
 }
+
+
+/* ============================================================
+   下载按钮：GitHub Releases 直链 + 公共加速线路
+   ============================================================ */
+.dl-apk .dl-apk-body { display: flex; flex-direction: column; gap: 9px; }
+.dl-apk .dl-meta { font-size: 11.5px; font-weight: 400; color: var(--ink-3); margin-left: 8px; }
+.dl-apk-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.dl-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 20px; border-radius: 14px;
+  background: linear-gradient(135deg, #4aa8ff, #0a6ed1);
+  color: #fff; font-size: 14px; font-weight: 600; text-decoration: none;
+  box-shadow: 0 6px 20px rgba(59, 157, 255, .25);
+  transition: transform .3s var(--ease), box-shadow .3s;
+}
+.dl-btn svg { width: 17px; height: 17px; flex: 0 0 auto; }
+.dl-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(59, 157, 255, .38); }
+.dl-btn:focus-visible, .dl-switch:focus-visible {
+  outline: 2px solid var(--qq-blue, #3b9dff); outline-offset: 3px;
+}
+.dl-line { font-size: 12px; color: var(--ink-3); }
+.dl-switch {
+  border: 1px solid var(--stroke); background: var(--surface); color: var(--ink-2);
+  border-radius: 10px; padding: 6px 12px; font-size: 12px;
+  cursor: pointer; font-family: inherit; transition: background .25s, color .25s;
+}
+.dl-switch:hover { color: var(--ink-1); background: var(--surface-2); }
+.dl-note { font-size: 11.5px; line-height: 1.6; color: var(--ink-3); }
+@media (max-width: 480px) { .dl-btn { width: 100%; justify-content: center; } }
