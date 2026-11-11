@@ -26,7 +26,9 @@ if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(do
 }
 
 const targets = ['index.html', 'sitemap.xml', 'robots.txt'];
-const patterns = [/https:\/\/YOUR_DOMAIN/g, /https:\/\/ondevice-kit\.app\.workbuddy\.host/g];
+const patterns = [/https:\/\/YOUR_DOMAIN/g,
+  /https:\/\/ondevice-kit\.app\.workbuddy\.host/g,
+  /https:\/\/ondevkit-10h3s3oe\.maozi\.io/g];
 let total = 0;
 for (const rel of targets) {
   const p = join(root, rel);
