@@ -32,21 +32,31 @@ python3 -m http.server 8080
 # 打开 http://localhost:8080
 ```
 
-## ⚠️ 绑定自己的域名前，先做这一步
+## 域名与 SEO
 
-`index.html` 的 canonical / og:url / og:image / twitter:image，以及 `sitemap.xml`、`robots.txt` 里目前是占位符 **`YOUR_DOMAIN`**（刻意不写死任何平台域名）。绑定域名后运行：
+站点当前正式域名：**`https://ondevkit-10h3s3oe.maozi.io`**（canonical / hreflang / og:url / og:image / twitter:image、sitemap.xml、robots.txt 已全部写好，没有占位符）。
+
+以后换成自己的域名时，运行：
 
 ```bash
 node scripts/set-domain.mjs ondevice.example.com
 ```
 
-脚本会替换所有占位符、生成 `CNAME`，然后提交推送：
+脚本会替换上述全部位置并生成 `CNAME`（仅 GitHub Pages 需要），然后提交推送即可。
 
-```bash
-git add -A && git commit -m "set custom domain" && git push
+## 安全说明
+
+- `index.html` 带 **CSP meta**：`default-src 'self'`、`object-src 'none'`、`base-uri 'self'`、`form-action 'none'`；`style-src` 保留 `'unsafe-inline'` 是因为 22 张能力卡用 `style="color:#xxx"` 内联主题色；`connect-src` 显式列出下载探测用的 GitHub 与公共加速域名，删掉会让自动选线失效。
+- **`frame-ancestors` / `X-Frame-Options` 无法通过 HTML meta 生效**，必须由托管平台设置响应头：
+
+```
+Content-Security-Policy: frame-ancestors 'none'
+X-Frame-Options: DENY
 ```
 
-> 不替换也能正常显示页面，只会影响 SEO  canonical 与社交分享卡片，建议上线前替换。
+  在帽子云 / maozi 控制台的「自定义响应头」里加这两条（静态托管侧配置，源码改不了）。
+- 已确认无 XSS 面：无 `eval` / `new Function`，`innerHTML` 仅拼接静态数据；仓库不含密钥、`.env`、备份文件。
+
 
 ## 部署方式（任选一种）
 
@@ -100,7 +110,7 @@ git -C github-site push             # 推送（脚本绝不自动推）
 
 推送后到托管平台点「重新部署」，或等平台自动拉取更新。
 
-- 脚本会从 `CNAME` 或 `index.html` 的 canonical 读取仓库**当前域名**并沿用它；还没绑域名时保持 `YOUR_DOMAIN` 占位符，不会把域名打回去。
+- 脚本会从 `CNAME` 或 `index.html` 的 canonical 读取仓库**当前域名**并沿用它，改域名时不会把 SEO 链接打回旧值。
 - 没有 WorkBuddy 工作区时，直接改本仓库的 `index.html` / `styles.css` / `app.js` 再 commit 也一样。
 - 改了 `styles.css` 或 `app.js`，记得把 `index.html` 里两个 `?v=17` 一起自增。
 
