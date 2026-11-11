@@ -4,10 +4,7 @@
 User-agent: *
 Allow: /
 
-# 构建产物与依赖，不收录
-Disallow: /node_modules/
-Disallow: /android/
-Disallow: /ios/
+# 静态站不含构建产物 / 源码目录，仅保留通用敏感路径兜底
 Disallow: /.git/
 
-Sitemap: https://YOUR_DOMAIN/sitemap.xml
+Sitemap: https://ondevkit-10h3s3oe.maozi.io/sitemap.xml
