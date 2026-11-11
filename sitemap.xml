@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- OnDevice Kit 站点地图；部署前运行 scripts/set-domain.mjs 设定正式域名 -->
+<!-- OnDevice Kit 站点地图；正式域名见 README -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://YOUR_DOMAIN/</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#capabilities</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#capabilities</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#screens</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#screens</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#agents</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#agents</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#ecosystem</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#ecosystem</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#deep</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#deep</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#tier</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#tier</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#style</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#style</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#demo</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#demo</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://YOUR_DOMAIN/#get</loc>
+    <loc>https://ondevkit-10h3s3oe.maozi.io/#get</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
