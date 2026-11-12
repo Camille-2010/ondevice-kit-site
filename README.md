@@ -18,6 +18,7 @@ assets/
   og-cover.jpg      社交分享封面
 favicon.png
 robots.txt / sitemap.xml
+download.json      App 内「检查更新」清单（version / apkUrl / size / notes）
 CONTENT.md          内部文案底稿（不渲染到页面，含历史废弃词，勿据此恢复功能）
 scripts/set-domain.mjs   绑定自定义域名的一键替换脚本
 .github/workflows/deploy-pages.yml   GitHub Pages 自动部署
@@ -60,12 +61,14 @@ X-Frame-Options: DENY
 
 ## 部署方式（任选一种）
 
-### A. GitHub Pages（本仓库已配好）
+### A. GitHub Pages
 
 1. 仓库 **Settings → Pages → Build and deployment → Source** 选 **GitHub Actions**。
 2. 每次 push 到 `main` 会自动跑 `.github/workflows/deploy-pages.yml` 发布。
 3. 默认地址：`https://Camille-2010.github.io/ondevice-kit-site/`。
 4. 绑自定义域名：在域名 DNS 加一条 `CNAME` 记录指向 `Camille-2010.github.io`，仓库根目录放 `CNAME` 文件（运行上面的脚本会自动生成），再到 Pages 设置里填域名并开启 **Enforce HTTPS**。
+
+> ⚠️ 工作流文件目前**只存在于本地 `github-site/` 与交付 zip 中，GitHub 远端尚未上传**（当时的 fine-grained token 缺 `Workflows: write`，写入被 403 拒绝）。要启用 GitHub Pages，请在网页端把 `.github/workflows/deploy-pages.yml` 上传到仓库同路径；不影响下面 D 方案的帽子云部署。
 
 ### B. Vercel / Netlify / Cloudflare Pages（更省事，推荐）
 
@@ -80,6 +83,34 @@ X-Frame-Options: DENY
 2. 先建站点并绑定域名，域名 A 记录指向服务器 IP。
 3. 再申请 Let's Encrypt 证书；验证方式选 **HTTP**（80 端口公网可达时最省事）。
 4. 开启 HTTPS / 强制跳转。
+
+### D. 帽子云 / maozi（当前正在用的主站）
+
+线上地址：`https://ondevkit-10h3s3oe.maozi.io/`，`Server: MaoziYun/3.18.0`，已开启 HSTS。
+
+交付物：工作区根目录的 **`ondevice-kit-site-github.zip`**（纯静态，85 个文件，不含 `.git`）。
+
+1. 在 maozi 控制台上传该 zip 并解压到**站点根目录**，确认 `index.html` 在根（不要套一层 `ondevice-kit-site-github/` 子目录，之前踩过这个坑导致 404）。
+2. **构建命令留空、输出目录 = 根目录**，纯静态不需要 npm / 构建。
+3. 点「重新部署」，等 CDN 刷新（`Cache-Control: max-age=1200`，最多约 20 分钟，验证时加随机查询参数可绕过）。
+4. 在「自定义响应头」里加这两条 —— **HTML meta 无法设置 `frame-ancestors` 和 `X-Frame-Options`**，只能平台下发：
+
+   ```
+   Content-Security-Policy: frame-ancestors 'none'
+   X-Frame-Options: DENY
+   ```
+
+5. 验证：
+
+   ```bash
+   curl -s  https://ondevkit-10h3s3oe.maozi.io/ | grep -c YOUR_DOMAIN      # 期望 0
+   curl -s  https://ondevkit-10h3s3oe.maozi.io/ | grep -o 'app.js?v=[0-9]*'  # 部署后期望 v=20
+   curl -s  https://ondevkit-10h3s3oe.maozi.io/download.json
+   curl -s  https://ondevkit-10h3s3oe.maozi.io/robots.txt
+   curl -sI https://ondevkit-10h3s3oe.maozi.io/ | grep -iE 'content-security|x-frame'
+   ```
+
+> 2026-11-12 复核：主站首页 `YOUR_DOMAIN` = 0、CSP meta 已生效、`?v=19`、sitemap 10 处均为正式域名、`.env` / 备份文件 404。**唯一未闭合项是上面第 4 步的两条响应头**，需人在控制台操作。
 
 ## 自定义域名 DNS 速查
 
@@ -96,8 +127,9 @@ X-Frame-Options: DENY
 
 官网有**两份副本**，不要各改各的：
 
-- `site/`（WorkBuddy 工作区）＝ 主开发副本，平时在这里改，里面写的是 WorkBuddy 线上域名
-- 本仓库 ＝ 部署副本，域名是占位符或你已绑定的正式域名，额外带 README / LICENSE / workflow 等文件
+- `site/`（WorkBuddy 工作区）＝ 主开发副本，平时在这里改
+- 本仓库 ＝ 部署副本，域名由 `CNAME` 或 `index.html` 的 canonical 决定（当前是 `https://ondevkit-10h3s3oe.maozi.io`），额外带 README / LICENSE / workflow 等文件
+- 两份副本的 `index.html` / `sitemap.xml` / `robots.txt` 都已写正式域名；同步脚本会读取部署副本当前域名并沿用它，不会把 SEO 链接打回旧值
 
 在工作区根目录用同步脚本，避免域名被改回、附加文件被覆盖：
 
@@ -112,11 +144,12 @@ git -C github-site push             # 推送（脚本绝不自动推）
 
 - 脚本会从 `CNAME` 或 `index.html` 的 canonical 读取仓库**当前域名**并沿用它，改域名时不会把 SEO 链接打回旧值。
 - 没有 WorkBuddy 工作区时，直接改本仓库的 `index.html` / `styles.css` / `app.js` 再 commit 也一样。
-- 改了 `styles.css` 或 `app.js`，记得把 `index.html` 里两个 `?v=17` 一起自增。
+- 改了 `styles.css` 或 `app.js`，记得把 `index.html` 里两个 `?v=20` 一起自增为 `?v=21`。
+- 本机 `git push` 常年 `CONNECT tunnel failed, 502`；`api.github.com` 可达。可改用工作区根目录的 `push-via-api.py`（GitHub Contents API 逐文件写，须自备有写权限的 token，且该 token 缺 `Workflows: write` 时会跳过 `.github/workflows/`）。
 
 ## 维护约定
 
-- 改了 `styles.css` 或 `app.js`，要把 `index.html` 里两个 `?v=17` 一起自增，否则浏览器用旧缓存。
+- 改了 `styles.css` 或 `app.js`，要把 `index.html` 里两个 `?v=20` 一起自增为 `?v=21`，否则浏览器用旧缓存。
 - 资源全是相对路径，仓库可放在任何子路径下；换成自定义域名根目录也无需改动。
 - 图标与 App 保持一致，不要重新设计造型；`.i3d img { filter: none }` 统一规则别删。
 - 能力卡当前 22 张（创作 8 / 智能 4 / 生态 5 / 底座 5），增删卡片要同步改 hero 与标题里的数字。
