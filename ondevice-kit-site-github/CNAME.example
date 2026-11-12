@@ -1,4 +1,0 @@
-# GitHub Pages 自定义域名用：把本文件复制/重命名为 CNAME，内容只写域名一行。
-# 或直接运行  node scripts/set-domain.mjs 你的域名  （脚本会自动生成 CNAME）
-# Vercel / Netlify / Cloudflare Pages 不需要本文件，在平台控制台里绑域名即可。
-your-domain.example.com
