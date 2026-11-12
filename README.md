@@ -57,6 +57,8 @@ X-Frame-Options: DENY
 
   在帽子云 / maozi 控制台的「自定义响应头」里加这两条（静态托管侧配置，源码改不了）。
 - 已确认无 XSS 面：无 `eval` / `new Function`，`innerHTML` 仅拼接静态数据；仓库不含密钥、`.env`、备份文件。
+- **误上传的旧版站点副本已清理**：2026-11-12 删除仓库 `ondevice-kit-site-github/` 下 82 个文件（当初把解压外层文件夹整个拖进仓库留下的），该目录线上已 404；Git 历史仍可恢复。`robots.txt` 已对 `CONTENT.md` / `CNAME.example` / `scripts/` / `.github/` 等维护文件加 Disallow，避免被搜索引擎索引（直接访问仍可，内容不含密钥）。
+- 这个仓库是纯静态前端资源，**保持 public 是合理的**（源码最终都会发到浏览器）；真正需要防护的是平台响应头与发布用的 PAT，不要为了「藏源码」改成 private，否则可能破坏自动部署。
 
 
 ## 部署方式（任选一种）
@@ -88,7 +90,7 @@ X-Frame-Options: DENY
 
 线上地址：`https://ondevkit-10h3s3oe.maozi.io/`，`Server: MaoziYun/3.18.0`，已开启 HSTS。
 
-交付物：工作区根目录的 **`ondevice-kit-site-github.zip`**（纯静态，85 个文件，不含 `.git`）。
+交付物：工作区根目录的 **`ondevice-kit-site-github.zip`**（纯静态，86 个文件，不含 `.git`）。
 
 1. 在 maozi 控制台上传该 zip 并解压到**站点根目录**，确认 `index.html` 在根（不要套一层 `ondevice-kit-site-github/` 子目录，之前踩过这个坑导致 404）。
 2. **构建命令留空、输出目录 = 根目录**，纯静态不需要 npm / 构建。
