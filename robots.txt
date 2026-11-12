@@ -4,7 +4,12 @@
 User-agent: *
 Allow: /
 
-# 静态站不含构建产物 / 源码目录，仅保留通用敏感路径兜底
+# 只索引站点本身；内部底稿、维护脚本、示例配置与旧版副本不入索引
 Disallow: /.git/
+Disallow: /.github/
+Disallow: /CONTENT.md
+Disallow: /CNAME.example
+Disallow: /scripts/
+Disallow: /ondevice-kit-site-github/
 
 Sitemap: https://ondevkit-10h3s3oe.maozi.io/sitemap.xml
