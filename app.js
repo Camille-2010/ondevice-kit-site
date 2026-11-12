@@ -773,7 +773,7 @@
     var line = document.getElementById("apkLine");
     var sw = document.getElementById("apkSwitch");
     if (!a) return;
-    var REL = "https://github.com/Camille-2010/OnDevice-Kit/releases/download/v1.20.0-201/OnDeviceKit-v1.20.0-201-release.apk";
+    var REL = "https://github.com/Camille-2010/OnDevice-Kit/releases/download/v1.20.1-202/OnDeviceKit-v1.20.1-202-release.apk";
     var TRUSTED = [
       { name: "加速线路 · ghproxy.net", url: "https://ghproxy.net/" + REL },
       { name: "GitHub 直连", url: REL }
